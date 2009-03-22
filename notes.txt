@@ -1,0 +1,8 @@
+
+-BPM-LAMBDA -> PLAMBDA
+-add *default-wildcard*  <-- done w/ *wildcard-prefix*?
+-make *logic-var-prefix*
+-speed up MATCH...
+-DEF!/DEF -> DEFP!/DEFP   ?
+-fish out DECLAREs
+-dynamic extent?
