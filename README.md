@@ -1,17 +1,19 @@
 
 # BPM: pattern matching for Common Lisp
 
+http://github.com/nallen05/bpm
+
 ## Overview
 
 BPM is a simple pattern matching library for Common Lisp.
 
-**STOP -- If you are here you might also be intrested in BPM2, BPM's ideological successor. BPM2 is quasi-vapourware slowly developing [here](http://github.com/nallen05/bpm2)**
+**STOP -- BPM is depricated in favor of BPM2, BPM's ideological successor. BPM2 is quasi-vapourware slowly developing [here](http://github.com/nallen05/bpm2)**
 
 ## Download 
 
 Download the latest gzipped tarball:
 
-* [Version 0.1.1](http://cloud.github.com/downloads/nallen05/bpm/bpm_0.1.1.tar.gz) 3.28.2009
+* [Version 0.1.1](http://cloud.github.com/downloads/nallen05/bpm/bpm_0.1.1.tar.gz) 3.28.2009 -- Updated documentation for Github, converted to Markdown
 * [Version 0.1](http://cloud.github.com/downloads/nallen05/bpm/bpm_0.1.tar.gz) 4.11.2007
 
 or get the latest version from the [Git](http://git-scm.com/) repository:
@@ -24,11 +26,11 @@ or get the latest version from the [Git](http://git-scm.com/) repository:
 
 ## A Bird's Eye View of BPM
 
-`MATCH` is like [`CASE'](http://www.lisp.org/HyperSpec/Body/mac_casecm_ccasecm_ecase.html) except it uses pattern matching instead of keys and it executes success forms within the [lexical scope](http://www-cgi.cs.cmu.edu/Groups/AI/util/html/cltl/clm/node43.html) of the matched pattern.
+`MATCH` is like `CASE' except it uses pattern matching instead of keys and it executes success forms within the [lexical scope](http://www-cgi.cs.cmu.edu/Groups/AI/util/html/cltl/clm/node43.html) of the matched pattern.
 
 `DEF!` and `DEF` allow you to write lisp functions in pattern matching style.
 
-`BPM-LAMBDA` is a pattern matching [lambda](href="http://www.lisp.org/HyperSpec/Body/sym_lambda.html).
+`BPM-LAMBDA` is a pattern matching [lambda](http://www.lisp.org/HyperSpec/Body/sym_lambda.html).
 
 `->` and `-->` are self-evaluating constants provided as syntactic spice to help make pattern matching forms more readable.
 
@@ -126,6 +128,8 @@ Note: you can use a `WHERE` or `WHERE-NOT` clauses within `DEF!`/`DEF` or `MATCH
 
    `MATCH` clauses can optionally take an arbitrary number of `WHERE` and `WHERE-NOT` clauses.
 
+- - -
+
 * `DEF! (name pattern &body body)`
   `DEF (name pattern &body body)`
 
@@ -149,6 +153,8 @@ Note: you can use a `WHERE` or `WHERE-NOT` clauses within `DEF!`/`DEF` or `MATCH
     not-a-cons
 
 Both `DEF!` and `DEF` can optionally have an arbitrary number of `WHERE` and `WHERE-NOT` clauses in `BODY`.
+
+- - -
 
 * `WHERE`
   `WHERE`
@@ -179,6 +185,8 @@ Note: `WHERE` and `WHERE-NOT` clauses are "short-circuiting" (like `AND`).
     (def get-username _req
       (error 'bad-request :request _req))
 
+- - -
+
 * `BPM-LAMBDA (pattern &body body)`
 
   _macro_ `BPM-LAMBDA` is just like `LAMBDA` except that it takes an S-Expression pattern as a first argument instead of a lambda list.
@@ -187,24 +195,30 @@ Note: `WHERE` and `WHERE-NOT` clauses are "short-circuiting" (like `AND`).
 
   Caveat: `BPM-LAMBDA` does not understand `WHERE` or `WHERE-NOT` clauses.
 
+- - -
+
 * `CREATE-BPM-COMPILER (pattern &optional bound)`
 
   _function_ `CREATE-BPM-COMPILER` takes an S-Expression Pattern and a list of already bound logic variables. It returns a function (`FUNCTION1`) and a new list of logiv variables.
 
   This new function takes a piece of unevaluated lisp code and returns the source of a new unary function (`FUNCTION2`). If `FUNCTION2`'s argument matches `PATTERN`, then `FUNCTION2` executes the lisp code given to `FUNCTION2` within the lexical scope of the match. Otherwise it simply returns `NIL`.
 
+- - -
+
 `BPM-LAMBDA` can be implemented as:
 
     (defmacro bpm-lambda (pattern &amp;body body)
       (funcall (create-bpm-compiler pattern) `(progn ,@body)))
 
+- - -
+
 `CREATE-BPM-COMPILER`'s second return value is the accumulated list of logiv variables that will be bound within `FUNCTION2`'s evaluation of the lisp form given as an argument to `FUNCTION1`. This list can be given as the argument to `CREATE-BPM-COMPILER`'s optional `BOUND` argument in recursive calls to `CREATE-BPM-COMPILER`: in this way it is possible to create nested pattern matchers that are lexically aware of the pattern matching environment around them.
 
-    cl-user&gt; (create-bpm-compiler '(1 _1 #(_1 _2) _2))
-    #&lt;Closure (:internal create-bpm-compiler 1) @ #x10719da2&gt;
+    cl-user> (create-bpm-compiler '(1 _1 #(_1 _2) _2))
+    #<Closure (:internal create-bpm-compiler 1) @ #x10719da2>
     (_2 _1)
     
-    cl-user&gt; (funcall * '(progn (print _1) (print _2)))
+    cl-user> (funcall * '(progn (print _1) (print _2)))
     (lambda (#:g6249)
       (declare (dynamic-extent #:g6249))
       (and (listp #:g6249)
@@ -230,30 +244,41 @@ Note: `WHERE` and `WHERE-NOT` clauses are "short-circuiting" (like `AND`).
                                      (progn (print _1)
     					(print _2))))))))))))
     
-    cl-user&gt; (funcall (coerce * 'function) '(1 one #(one two) two))
+    cl-user> (funcall (coerce * 'function) '(1 one #(one two) two))
     "one"
     "two"
+
+- - -
 
 * `*LOGIV-VAR-PREFIX-CHAR*`
 
   _variable_ The character that indicates logic and wildcard variables. Initially set to `#\_`.
 
+- - -
+
 * `*LOGIV-VAR-PRED*`
 
   _variable_ A unary predicate that returns if its argument is a logic variable. Initially set to a function that looks for symbols whose names start with `*LOGIC-VAR-PREFIX-CHAR*
+
+- - -
 
 * `*LOGIV-VAR-WILDCARD*`
 
   _variable_ A unary predicate that returns `T` if its argument is a logic var wildcard. Initially set to a function that looks for symbols with the name `*LOGIC-VAR-PREFIX-CHAR*
 
+- - -
 
 * `*DESTRUCTURE-SIMPLE-VECTORS-P*`
 
   _variable_ Initially set to T. Bind this to NIL if you want vectors to be seen as atomic objects in your S-Expression Patterns.
 
+- - -
+
 * `*LOGIC-VAR-EQUALITY-TEST*`
 
   _variable_ Lambda form or name of function that tests whether or not S-Expressions match parts of an S-Expression pattern. Initially set to `EQL`.
+
+- - -
 
 * `->' / `-->`
 
