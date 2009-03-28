@@ -110,9 +110,9 @@ Note: you can use a `WHERE` or `WHERE-NOT` clauses within `DEF!`/`DEF` or `MATCH
 
 ## API
 
-- - -
-
 * `MATCH (form &amp clauses)`
+
+- - -
 
    _macro_  `Match` is like [`CASE`](http://www.lisp.org/HyperSpec/Body/mac_casecm_ccasecm_ecase.html) except it uses S-Expression Patterns instead of keys and success forms re executed within the lexical scope of their respective matches.
 
@@ -128,10 +128,10 @@ Note: you can use a `WHERE` or `WHERE-NOT` clauses within `DEF!`/`DEF` or `MATCH
 
    `MATCH` clauses can optionally take an arbitrary number of `WHERE` and `WHERE-NOT` clauses.
 
-- - -
-
 * `DEF! (name pattern &body body)`
   `DEF (name pattern &body body)`
+
+- - -
 
   _macro_ `DEF!` is like `DEFUN` except it takes an S-Expression Pattern instead of a lambda list. The created function takes one argument: if that argument matches `PATTERN`, then the function executes `BODY` within the lexical scope of the match. Otherwise it simply returns `NIL`.
 
@@ -158,10 +158,10 @@ Note: you can use a `WHERE` or `WHERE-NOT` clauses within `DEF!`/`DEF` or `MATCH
 
 Both `DEF!` and `DEF` can optionally have an arbitrary number of `WHERE` and `WHERE-NOT` clauses in `BODY`.
 
-- - -
-
 * `WHERE`
   `WHERE`
+
+- - -
 
   _symbols_ The symbols `WHERE` and `WHERE-NOT` act as special keywords when seen inside `MATCH` clauses or `DEF!`/`DEF` bodies.
 
@@ -189,9 +189,9 @@ Note: `WHERE` and `WHERE-NOT` clauses are "short-circuiting" (like `AND`).
     (def get-username _req
       (error 'bad-request :request _req))
 
-- - -
-
 * `BPM-LAMBDA (pattern &body body)`
+
+- - -
 
   _macro_ `BPM-LAMBDA` is just like `LAMBDA` except that it takes an S-Expression pattern as a first argument instead of a lambda list.
 
@@ -199,22 +199,18 @@ Note: `WHERE` and `WHERE-NOT` clauses are "short-circuiting" (like `AND`).
 
   Caveat: `BPM-LAMBDA` does not understand `WHERE` or `WHERE-NOT` clauses.
 
-- - -
-
 * `CREATE-BPM-COMPILER (pattern &optional bound)`
+
+- - -
 
   _function_ `CREATE-BPM-COMPILER` takes an S-Expression Pattern and a list of already bound logic variables. It returns a function (`FUNCTION1`) and a new list of logiv variables.
 
   This new function takes a piece of unevaluated lisp code and returns the source of a new unary function (`FUNCTION2`). If `FUNCTION2`'s argument matches `PATTERN`, then `FUNCTION2` executes the lisp code given to `FUNCTION2` within the lexical scope of the match. Otherwise it simply returns `NIL`.
 
-- - -
-
 `BPM-LAMBDA` can be implemented as:
 
     (defmacro bpm-lambda (pattern &amp;body body)
       (funcall (create-bpm-compiler pattern) `(progn ,@body)))
-
-- - -
 
 `CREATE-BPM-COMPILER`'s second return value is the accumulated list of logiv variables that will be bound within `FUNCTION2`'s evaluation of the lisp form given as an argument to `FUNCTION1`. This list can be given as the argument to `CREATE-BPM-COMPILER`'s optional `BOUND` argument in recursive calls to `CREATE-BPM-COMPILER`: in this way it is possible to create nested pattern matchers that are lexically aware of the pattern matching environment around them.
 
@@ -252,38 +248,36 @@ Note: `WHERE` and `WHERE-NOT` clauses are "short-circuiting" (like `AND`).
     "one"
     "two"
 
-- - -
-
 * `*LOGIV-VAR-PREFIX-CHAR*`
+
+- - -
 
   _variable_ The character that indicates logic and wildcard variables. Initially set to `#\_`.
 
-- - -
-
 * `*LOGIV-VAR-PRED*`
+
+- - -
 
   _variable_ A unary predicate that returns if its argument is a logic variable. Initially set to a function that looks for symbols whose names start with `*LOGIC-VAR-PREFIX-CHAR*`
 
-- - -
-
 * `*LOGIV-VAR-WILDCARD*`
+
+- - -
 
   _variable_ A unary predicate that returns `T` if its argument is a logic var wildcard. Initially set to a function that looks for symbols with the name `*LOGIC-VAR-PREFIX-CHAR*`
 
-- - -
-
 * `*DESTRUCTURE-SIMPLE-VECTORS-P*`
 
-  _variable_ Initially set to T. Bind this to NIL if you want vectors to be seen as atomic objects in your S-Expression Patterns.
-
 - - -
+
+  _variable_ Initially set to T. Bind this to NIL if you want vectors to be seen as atomic objects in your S-Expression Patterns.
 
 * `*LOGIC-VAR-EQUALITY-TEST*`
 
   _variable_ Lambda form or name of function that tests whether or not S-Expressions match parts of an S-Expression pattern. Initially set to `EQL`.
 
-- - -
-
 * `->` / `-->`
+
+- - -
 
   _constants_ Syntactic spice. These self-evaluating constants exist only to help make your code more visually intuitive.
