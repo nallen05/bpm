@@ -284,6 +284,6 @@ Note: `WHERE` and `WHERE-NOT` clauses are "short-circuiting" (like `AND`).
 
 - - -
 
-* `->' / `-->`
+* `->` / `-->`
 
   _constants_ Syntactic spice. These self-evaluating constants exist only to help make your code more visually intuitive.
