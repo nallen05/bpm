@@ -92,7 +92,7 @@ Caveat: It is not immediately assumed that `_1` != `_2`. So this pattern matches
 
 and
 
-   #(b b b b)
+    #(b b b b)
 
 as well as
 
@@ -106,7 +106,7 @@ Note: you can use a `WHERE` or `WHERE-NOT` clauses within `DEF!`/`DEF` or `MATCH
 
 ## Changing the Syntax
 
-`CREATE-BPM-COMPILER`'s syntax is slightly flexible. see `*LOGIC-VAR-PREFIX-CHAR*`, `*LOGIC-VAR-PRED*`,`*LOGIC-VAR-WILDCARD-PRED*`, and *DESTRUCTURE-SIMPLE-VECTORS-P*.
+`CREATE-BPM-COMPILER`'s syntax is slightly flexible. see `*LOGIC-VAR-PREFIX-CHAR*`, `*LOGIC-VAR-PRED*`,`*LOGIC-VAR-WILDCARD-PRED*`, and `*DESTRUCTURE-SIMPLE-VECTORS-P*`.
 
 ## API
 
@@ -114,7 +114,7 @@ Note: you can use a `WHERE` or `WHERE-NOT` clauses within `DEF!`/`DEF` or `MATCH
 
 * `MATCH (form &amp clauses)`
 
-   _macro_  `Match` is like [`CASE`](http://www.lisp.org/HyperSpec/Body/mac_casecm_ccasecm_ecase.html) except it uses S-Expression PAtterns instead of keys and success forms re executed within the lexical scope of their respective matches.
+   _macro_  `Match` is like [`CASE`](http://www.lisp.org/HyperSpec/Body/mac_casecm_ccasecm_ecase.html) except it uses S-Expression Patterns instead of keys and success forms re executed within the lexical scope of their respective matches.
 
     cl-user> (match '(1 2)
     	       ((_h . _t) -&gt; (format nil "list with a head of ~A and a tail of ~A" _h _t))
@@ -138,8 +138,10 @@ Note: you can use a `WHERE` or `WHERE-NOT` clauses within `DEF!`/`DEF` or `MATCH
     cl-user> (def! foo (_x . _y)
                -> (cons _y _x))
     foo
+
     cl-user> (foo '(1 . 2))
     (2 . 1)
+
     cl-user> (foo 1)
     nil
 
@@ -147,8 +149,10 @@ Note: you can use a `WHERE` or `WHERE-NOT` clauses within `DEF!`/`DEF` or `MATCH
 
     cl-user> (def foo _ -> 'not-a-cons)
     foo
+
     cl-user> (foo '(1 2 3))
     ((2 3) . 1)
+
     cl-user> (foo 1)
     not-a-cons
 
@@ -258,13 +262,13 @@ Note: `WHERE` and `WHERE-NOT` clauses are "short-circuiting" (like `AND`).
 
 * `*LOGIV-VAR-PRED*`
 
-  _variable_ A unary predicate that returns if its argument is a logic variable. Initially set to a function that looks for symbols whose names start with `*LOGIC-VAR-PREFIX-CHAR*
+  _variable_ A unary predicate that returns if its argument is a logic variable. Initially set to a function that looks for symbols whose names start with `*LOGIC-VAR-PREFIX-CHAR*`
 
 - - -
 
 * `*LOGIV-VAR-WILDCARD*`
 
-  _variable_ A unary predicate that returns `T` if its argument is a logic var wildcard. Initially set to a function that looks for symbols with the name `*LOGIC-VAR-PREFIX-CHAR*
+  _variable_ A unary predicate that returns `T` if its argument is a logic var wildcard. Initially set to a function that looks for symbols with the name `*LOGIC-VAR-PREFIX-CHAR*`
 
 - - -
 
